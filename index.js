@@ -201,17 +201,13 @@ $(document).ready(function(){
     function shiftOne() {
         var beatHeight = View.$intervalos.children()[0].offsetHeight / Model.bpi;
         var amountPx = beatHeight * Controller.indexBeat;
-        View.$intervalos.transition({
-            y: amountPx
-        });
+        View.$intervalos.css('transform', 'translateY('+ amountPx + 'px);');
     };
 
     function shiftBack() {
         Controller.indexBeat = 0;
         Controller.indexVoice = 0;
-        View.$intervalos.transition({
-            y: 0
-        });
+        View.$intervalos.css('transform', 'translateY(0px);');
     };
 
     function renderConfig() {
