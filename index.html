@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="http://ricostacruz.com/jquery.transit/jquery.transit.min.js"></script>
+        <script type="text/javascript" src="index.js"></script>
+        <link rel="stylesheet" type="text/css" href="index.css">
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+
+            <div class="screen-config">
+                <div class="title">Music Hero</div>
+                <p class="subtitle">Insert your song data so we can rrrock it</p>
+                <form class="song-config">
+                    <label>Song duration (seconds) </label><input class="song-duration"></input>
+                    <label>Beats Per Minute </label><input class="bpm"></input>
+                    <label>Beats Per Interval </label><input class="bpi"></input>
+                    <label>Time signature </label><select class="bpf">
+                        <option value="1">1/4</option>
+                        <option value="2">2/4</option>
+                        <option value="3">3/4</option>
+                        <option value="4">4/4</option>
+                    </select>
+                </form>
+                <form class="song-notes">
+                    <label class="notes-heading">Insert your custom notes on each interval</label>
+                    <div class="custom-notes">
+                        <div class="custom-note"><input class="custom-note-text" placeholder="Note text"></input><input class="custom-note-interval" placeholder="Interval number"></input></div>
+                    </div>
+                    <div class="add-btn">+</div>
+                </form>
+                <div class="go-btn">GO</div>
+            </div>
+
+            <div class="screen-play">
+                <div class="metronomo"></div>
+                <div class="play-btn">START</div>
+                <div class="restart-btn">RESTART</div>
+                <div class="back-btn">BACK</div>
+                <div class="bg-pista">
+                    <div class="meta"></div>
+                </div>
+                <div class="pista">
+                    <div class="intervalos"></div>
+                </div>
+            </div>
+
+        </div>
+    </body>
+</html>

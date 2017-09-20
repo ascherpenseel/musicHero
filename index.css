@@ -1,0 +1,335 @@
+:root {
+    --angulo: 75deg;
+    --viewport: 650px;
+    --largo-pista: calc(var(--viewport)/(0.259));
+    /*  largo-pista = viewport / cos(angulo)  */
+    --ancho-pista: 25%;
+    --size-metronomo: 100px;
+}
+
+body {
+    font-family: 'Helvetica';
+}
+
+.container {
+    position: relative;
+    perspective: 500px;
+    perspective-origin: 50% 37%;
+    background-image: url('images/concert.jpg');
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 0px;
+    height: var(--viewport);
+    overflow: hidden;
+}
+
+.screen-play {
+    display: none;
+}
+
+.screen-config {
+
+}
+
+.title {
+    font-size: 2em;
+    color: #8a6620;
+    margin-top: 25px;
+    width: 100%;
+    font-family: 'Press Start 2P';
+    text-align: center;
+}
+.subtitle {
+    font-size: 1.2em;
+    font-style: italic;
+    color: #555;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    margin-bottom: 0;
+    margin-top: 15px;
+    background-color: rgba(255,255,255,.3);
+}
+
+form.song-config {
+    margin-top: 10px;
+    width: 80%;
+    padding-left: 10%;
+}
+
+form.song-notes {
+    margin-top: 30px;
+    background-color: rgba(255,255,255,0.3);
+    width: 100%;
+    padding: 15px 0 15px 0;
+}
+
+label.notes-heading {
+    font-size: 0.9em;
+    background-color: rgba(210,170,100,.5);
+    padding: 10px 20px;
+    width: 70%;
+    margin-left: 10%;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: left;
+    display: block;
+}
+
+label {
+    display: inline-block;
+    font-size: 0.9em;
+    width: 60%;
+    margin-top: 5px;
+    background-color: rgba(255,255,255, 0.1);
+    border-radius: 20px;
+    padding: 5px 0 5px 20px;
+}
+
+input, select {
+    width: 10%;
+    text-align: center;
+    max-width: 50px;
+    margin-left: 20%;
+    border: none;
+    border-radius: 2px;
+    height: 25px;
+    padding: 10px;
+}
+
+.song-notes .custom-notes {
+    width: 70%;
+    display: inline-block;
+    margin-left: 10%;
+}
+
+.song-notes input.custom-note-text {
+    margin-left: 0;
+    text-align: left;
+    width: 70%;
+    max-width: none;
+}
+
+.song-notes input.custom-note-interval {
+    margin-left: 10px;
+    width: calc(30% - 10px);
+    max-width: none;
+    text-align: left;
+}
+
+.song-notes .add-btn {
+    display: inline-block;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    height: 25px;
+    width: 25px;
+    border: 2px solid white;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.go-btn {
+    width: 20%;
+    margin-left: 40%;
+    margin-top: 50px;
+    font-family: 'Press Start 2P';
+    font-size: 2em;
+    text-align: center;
+    padding: 10px 0px;
+    font-size: 1.25em;
+    border-radius: var(--size-metronomo);
+    cursor: pointer;
+    color: #500;
+    border: 2px solid #500;
+    background: linear-gradient(rgba(200, 150, 150, 0.9),#FFF);
+}
+
+.go-btn:hover {
+    background: linear-gradient(#FFF, rgba(200, 150, 150, 0.9));
+}
+
+.go-btn:active {
+    margin-top: 52px;
+}
+
+.bg-pista, .pista {
+    position: absolute;
+    width: var(--ancho-pista);
+    bottom: 0px;
+    transform: rotateX(var(--angulo));
+    transform-origin: bottom;
+    transform-style: preserve-3d;
+}
+
+.bg-pista {
+    height: calc(var(--largo-pista));
+    left: calc(50% - var(--ancho-pista)/2);
+    border-top: none;
+    border-bottom: none;
+    background-image: linear-gradient(to bottom, rgba(244,233,213,1),transparent), url('images/wood.jpg');
+    background-repeat: repeat;
+}
+
+.pista {
+    height: var(--largo-pista);
+    left: calc(50% - var(--ancho-pista)/2);
+}
+
+.intervalos {
+    position: absolute;
+    width: 100%;
+    bottom: 100px;
+    transform: translateY(0px);
+    -webkit-backface-visibility: hidden;
+}
+
+.intervalo {
+    display: block;
+    position: relative;
+    top: 0px;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 7px indianred;
+    border-style: ridge;
+    width: 100%;
+}
+
+.nota {
+    position: absolute;
+    left: 100%;
+    bottom: 0px;
+    width: 100%;
+    margin-left: 15px;
+    background-color: rgba(240, 230, 140, 0.8);
+    padding: 5px 13px;
+    font-size: 20px;
+    border-radius: 15px;
+}
+
+.beat {
+    position: absolute;
+    left: 25%;
+    bottom: 25%;
+    width: 50%;
+    height: 3px;
+    background-color: #333;
+}
+
+.play-btn, .restart-btn, .back-btn {
+    position: absolute;
+    text-align: center;
+    font-family: 'Press Start 2P';
+    color: #500;
+    cursor: pointer;
+}
+
+.back-btn {
+    font-size: 0.9em;
+    top: 25px;
+    left: 25px;
+}
+
+.back-btn:hover {
+    color: #900;
+}
+
+.restart-btn {
+    font-size: 0.9em;
+    top: 25px;
+    right: 25px;
+    display: none;
+}
+
+.restart-btn:hover {
+    color: #900;
+}
+
+.play-btn {
+    position: absolute;
+    width: calc(2*var(--size-metronomo));
+    height: calc(1px + var(--size-metronomo));
+    line-height: var(--size-metronomo);
+    border: 2px solid;
+    left: calc(50% - var(--size-metronomo) - 3px);
+    top: 51px;
+    font-size: 1.25em;
+    border-radius: var(--size-metronomo);
+    background: linear-gradient(rgba(255, 70, 70, 0.1),transparent);
+    transition: all .3s ease-out;
+    transition-property: width, height, top, left, background-color, opacity;
+}
+
+.play-btn:hover {
+    background: linear-gradient(rgba(120, 0, 0, 0.8),rgba(255, 70, 70, 0.8));
+}
+
+.play-btn:active {
+    background: linear-gradient(#700,#F55);
+    top: 52px;
+}
+
+.play-btn.shrink {
+    width: var(--size-metronomo);
+    height: var(--size-metronomo);
+    left: calc(50% - var(--size-metronomo)/2 - 3px);
+    top: 52px;
+    background: black;
+    color: transparent;
+}
+
+.metronomo {
+    display: none;
+    position: absolute;
+    z-index: 2;
+    width: var(--size-metronomo);
+    height: var(--size-metronomo);
+    left: calc(50% - var(--size-metronomo)/2);
+    top: 55px;
+    border-radius: var(--size-metronomo);
+    background: radial-gradient(ellipse at center, #000 50%,#CCC 100%);
+    box-shadow: 0 0 0 calc(var(--size-metronomo)/3) rgba(255,250,250,.3);
+}
+
+.boom {
+  animation: pump .2s ease 1 forwards;
+}
+
+.meta {
+    position: fixed;
+    width: 200vw;
+    bottom: 100px;
+    left: -100vw;
+    z-index: 2;
+    background: -webkit-linear-gradient(top, rgba(4,34,112,.1) 0%, rgba(199,206,255,1) 50%, rgba(4,34,112,1) 100%);
+    height: 10px;
+}
+
+@keyframes pump {
+  0% {
+    width: var(--size-metronomo);
+    height: var(--size-metronomo);
+    left: calc(50% - var(--size-metronomo)/2);
+    top: 55px;
+    box-shadow: 0 0 0 calc(var(--size-metronomo)/3) rgba(255,250,250,.3);
+    background: radial-gradient(ellipse at center, #000 50%,#CCC 100%);
+  }
+  50% {
+    width: calc(var(--size-metronomo)*1.3);
+    height: calc(var(--size-metronomo)*1.3);
+    left: calc(50% - var(--size-metronomo)*1.3/2);
+    top: calc(55px - var(--size-metronomo)/4);
+    box-shadow: 0 0 0 2px rgba(200,150,150,.7);
+    background: #555;
+  }
+  100% {
+    width: var(--size-metronomo);
+    height: var(--size-metronomo);
+    left: calc(50% - var(--size-metronomo)/2);
+    top: 55px;
+    box-shadow: 0 0 0 calc(var(--size-metronomo)/3) rgba(255,250,250,.3);
+    background: radial-gradient(ellipse at center, #000 50%,#CCC 100%);
+  }
+}
