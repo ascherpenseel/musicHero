@@ -127,6 +127,7 @@ $(document).ready(function(){
         $('.song-duration').val(Model.songDuration);
         $('.bpm').val(Model.bpm);
         $('.bpi').val(Model.bpi);
+        $('select.bpf').val(4);
     };
 
     function setAppValues() {
@@ -178,7 +179,7 @@ $(document).ready(function(){
     function beat(lastTime) {
         if (Controller.indexBeat < (Controller.totalBeats + Model.bpi) && !Controller.pause) {
             Controller.synth.speak(Controller.voice[Controller.indexVoice]);
-            Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf;
+            Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf; console.log(Controller.indexVoice);
             View.$metronomo.addClass('boom');
             shiftOne();
             beatCaller(lastTime);
@@ -201,7 +202,7 @@ $(document).ready(function(){
     function shiftOne() {
         var beatHeight = View.$intervalos.children()[0].offsetHeight / Model.bpi;
         var amountPx = beatHeight * Controller.indexBeat;
-        View.$intervalos.css('transform', 'translateY('+ amountPx + 'px);');
+        View.$intervalos.css('transform', 'translateY('+ amountPx +'px)');
     };
 
     function shiftBack() {
