@@ -50,6 +50,10 @@ $(document).ready(function(){
     View.$userData = $('form.song-config');
     View.$goBtn = $('.go-btn');
 
+    View.$metronomo.on('animationend', function() {
+        View.$metronomo.removeClass('boom');
+    });
+
     View.$goBtn.click(function() {
         var valid = validateForm();
         if (valid) {
@@ -59,16 +63,15 @@ $(document).ready(function(){
     });
 
     View.$backBtn.click(function() {
+        clearInterval(Controller.timeEngineBeats);
+        clearInterval(Controller.timeEngineAnimation);
+        shiftBack();
         renderConfig();
     });
 
-    View.$metronomo.on('animationend', function() {
-        View.$metronomo.removeClass('boom');
-    });
-
     View.$restartBtn.click(function() {
-        // clearInterval(Controller.timeEngine);
-        Controller.pause = true;
+        clearInterval(Controller.timeEngineBeats);
+        clearInterval(Controller.timeEngineAnimation);
         $(this).fadeOut('fast');
         View.$playBtn.removeClass('shrink');
         View.$playBtn.fadeIn();
@@ -87,10 +90,26 @@ $(document).ready(function(){
     });
 
     Controller.element.on('play:clicked', function(){
-        // Controller.timeEngine = setInterval(checkBeat, Controller.resolution);
-        Controller.startTime = performance.now();
-        Controller.pause = false;
-        beat(Controller.startTime);
+
+        var pxPerMove = (Controller.resolution * (View.$intervalos.height() + View.$intervalos.height()/Controller.totalIntervals)) / ((Model.songDuration + Model.songDuration/Controller.totalIntervals) * 1000);
+console.log(pxPerMove);
+        // Animation
+        Controller.timeEngineAnimation = setInterval(function(){
+            Controller.position += pxPerMove;
+            View.$intervalos.css('transform', 'translateY(' + Controller.position + 'px)');
+        }, Controller.resolution);
+
+        // Voices and Metronome
+        Controller.timeEngineBeats = setInterval(function(){
+            Controller.synth.speak(Controller.voice[Controller.indexVoice]);
+            Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf;
+            Controller.indexBeat++;
+            View.$metronomo.addClass('boom');
+            if (Controller.indexBeat == Controller.totalBeats + Model.bpi) {
+                clearInterval(Controller.timeEngineBeats);
+                clearInterval(Controller.timeEngineAnimation);
+            }
+        }, Controller.timePerBeat);
 
     });
 
@@ -131,6 +150,7 @@ $(document).ready(function(){
     };
 
     function setAppValues() {
+
         var inputs = View.$userData.find('input');
 
         Model.songDuration = parseInt($(inputs[0]).val());
@@ -143,6 +163,7 @@ $(document).ready(function(){
         Controller.playingInterval = 0;
         Controller.indexVoice = 0;
         Controller.indexBeat = 0;
+        Controller.position = 0;
         Controller.timePerBeat = Model.songDuration * 1000 / Controller.totalBeats;
         Controller.resolution = 30;
 
@@ -158,64 +179,15 @@ $(document).ready(function(){
         });
     };
 
-    function checkBeat() {
-        if (Controller.indexBeat < (Controller.totalBeats + Model.bpi)) {
-            var actualTime = performance.now(),
-                actualPoint = actualTime % Controller.timePerBeat;
-
-            if (actualPoint >= 0 && actualPoint < Controller.resolution) {
-                // Controller.synth.speak(Controller.voice[Controller.indexVoice]);
-                Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf;
-                Controller.indexBeat++;
-                View.$metronomo.addClass('boom');
-                shiftOne();
-            }
-        }
-        else {
-            clearInterval(Controller.timeEngine);
-        }
-    };
-
-    function beat(lastTime) {
-        if (Controller.indexBeat < (Controller.totalBeats + Model.bpi) && !Controller.pause) {
-            Controller.synth.speak(Controller.voice[Controller.indexVoice]);
-            Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf; console.log(Controller.indexVoice);
-            View.$metronomo.addClass('boom');
-            shiftOne();
-            beatCaller(lastTime);
-        }
-        else {
-            return;
-        }
-    };
-
-    function beatCaller (lastTime) {
-        var processingDelay = performance.now() - lastTime;
-        var timeoutDelay = lastTime - Controller.indexBeat * Controller.timePerBeat - Controller.startTime;
-        var nextBeat = setTimeout(function() {
-            var time = performance.now();
-            Controller.indexBeat++;
-            beat(time);
-        }, Controller.timePerBeat - processingDelay - timeoutDelay);
-    };
-
-    function shiftOne() {
-        var beatHeight = View.$intervalos.children()[0].offsetHeight / Model.bpi;
-        var amountPx = beatHeight * Controller.indexBeat;
-        View.$intervalos.css('transform', 'translateY('+ amountPx +'px)');
-    };
-
     function shiftBack() {
         Controller.indexBeat = 0;
         Controller.indexVoice = 0;
-        View.$intervalos.css('transform', 'translateY(0px);');
+        Controller.position = 0;
+        View.$intervalos.css('transform', 'translateY(0px)');
     };
 
     function renderConfig() {
         View.$screenPlay.fadeOut();
-
-        Controller.pause = true;
-        shiftBack();
         View.$playBtn.removeClass('shrink');
         View.$playBtn.fadeIn();
         View.$restartBtn.fadeOut();
