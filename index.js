@@ -48,11 +48,15 @@ $(document).ready(function(){
     View.$backBtn = $('.back-btn');
 
     View.$userData = $('form.song-config');
+    View.$customNotes = $('.custom-notes');
+    View.$addBtn = $('.add-btn');
     View.$goBtn = $('.go-btn');
 
     View.$metronomo.on('animationend', function() {
         View.$metronomo.removeClass('boom');
     });
+
+    View.$addBtn.click(addCustomNote);
 
     View.$goBtn.click(function() {
         var valid = validateForm();
@@ -91,13 +95,8 @@ $(document).ready(function(){
 
     Controller.element.on('play:clicked', function(){
 
-        var pxPerMove = (Controller.resolution * (View.$intervalos.height() + View.$intervalos.height()/Controller.totalIntervals)) / ((Model.songDuration + Model.songDuration/Controller.totalIntervals) * 1000);
-console.log(pxPerMove);
-        // Animation
-        Controller.timeEngineAnimation = setInterval(function(){
-            Controller.position += pxPerMove;
-            View.$intervalos.css('transform', 'translateY(' + Controller.position + 'px)');
-        }, Controller.resolution);
+        var beatHeight = View.$intervalos.children()[0].offsetHeight / Model.bpi;
+        var pxPerMove = beatHeight*Controller.resolution/Controller.timePerBeat;
 
         // Voices and Metronome
         Controller.timeEngineBeats = setInterval(function(){
@@ -109,6 +108,14 @@ console.log(pxPerMove);
                 clearInterval(Controller.timeEngineBeats);
                 clearInterval(Controller.timeEngineAnimation);
             }
+        }, Controller.timePerBeat);
+
+        // Animation
+        setTimeout(function(){
+            Controller.timeEngineAnimation = setInterval(function(){
+                Controller.position += pxPerMove;
+                View.$intervalos.css('transform', 'translateY(' + Controller.position + 'px)');
+            }, Controller.resolution);
         }, Controller.timePerBeat);
 
     });
@@ -146,7 +153,7 @@ console.log(pxPerMove);
         $('.song-duration').val(Model.songDuration);
         $('.bpm').val(Model.bpm);
         $('.bpi').val(Model.bpi);
-        $('select.bpf').val(4);
+        $('select.bpf').val(Model.bpf);
     };
 
     function setAppValues() {
@@ -177,6 +184,11 @@ console.log(pxPerMove);
         Controller.voice.forEach(function(voz){
         	voz.rate = Model.bpm/60;
         });
+    };
+
+    function addCustomNote() {
+        var customNote = '<div class="custom-note"><input class="custom-note-text" placeholder="Note text"></input><input class="custom-note-interval" placeholder="Interval number"></input></div>';
+        View.$customNotes.append(customNote);
     };
 
     function shiftBack() {

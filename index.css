@@ -72,7 +72,7 @@ label.notes-heading {
     padding: 10px 20px;
     width: 70%;
     margin-left: 10%;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     border-radius: 5px;
     text-align: left;
     display: block;
@@ -105,6 +105,10 @@ input, select {
     margin-left: 10%;
 }
 
+.song-notes .custom-notes .custom-note {
+    margin-top: 10px;
+}
+
 .song-notes input.custom-note-text {
     margin-left: 0;
     text-align: left;
@@ -121,6 +125,7 @@ input, select {
 
 .song-notes .add-btn {
     display: inline-block;
+    margin-left: 5px;
     color: white;
     font-size: 1.2em;
     font-weight: bold;
@@ -129,6 +134,11 @@ input, select {
     border: 2px solid white;
     border-radius: 20px;
     text-align: center;
+    cursor: pointer;
+}
+
+.song-notes .add-btn:hover {
+    box-shadow: 0px 0px 24px 0px rgba(255,255,255,1);
 }
 
 .go-btn {
