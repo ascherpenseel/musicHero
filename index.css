@@ -118,9 +118,17 @@ input, select {
 
 .song-notes input.custom-note-interval {
     margin-left: 10px;
-    width: calc(30% - 10px);
+    width: calc(15% - 10px);
     max-width: none;
     text-align: left;
+    cursor: text;
+}
+
+.song-notes .jscolor {
+    margin-left: 10px;
+    width: calc(15% - 10px);
+    color: transparent;
+    cursor: pointer;
 }
 
 .song-notes .add-btn {

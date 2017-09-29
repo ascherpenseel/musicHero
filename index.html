@@ -2,6 +2,7 @@
     <head>
         <meta charset="UTF-8">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="vendor/jscolor.js"></script>
         <script type="text/javascript" src="index.js"></script>
         <link rel="stylesheet" type="text/css" href="index.css">
         <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
@@ -26,7 +27,9 @@
                 <form class="song-notes">
                     <label class="notes-heading">Insert your custom notes on each interval</label>
                     <div class="custom-notes">
-                        <div class="custom-note"><input class="custom-note-text" placeholder="Note text"></input><input class="custom-note-interval" placeholder="Interval number"></input></div>
+                        <div class="custom-note">
+                            <input class="custom-note-text" placeholder="Note text"></input><input class="custom-note-interval" placeholder="Interval number"></input><input class="jscolor" value="f0e68c">
+                        </div>
                     </div>
                     <div class="add-btn">+</div>
                 </form>

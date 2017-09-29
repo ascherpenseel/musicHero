@@ -1,7 +1,4 @@
 
-var rojo        = 'rgba(227,137,137,.8)',
-    amarillo    = 'rgba(240,230,140,.8)';
-
 var Model = {},
     View = {},
     Controller = {};
@@ -13,22 +10,7 @@ Model.bpm = 123,              // beat per minute
 Model.bpi = 16,               // beats per interval
 Model.bpf = 4;                // beats per fraction
 
-
-Model.notes = {               // user notes
-    2   :   [{
-                color       : amarillo,
-                texto       : 'Batería: suave'
-            },
-            {
-                color       : rojo,
-                texto       : 'Guitarra: fuerte'
-            }],
-    4   :   [{
-                color       : amarillo,
-                texto       : 'Bateria: fuerte',
-                intervalo   : 2
-            }]
-};
+Model.notes = {};
 
 // ======================= App ====================== //
 
@@ -48,7 +30,7 @@ $(document).ready(function(){
     View.$backBtn = $('.back-btn');
 
     View.$userData = $('form.song-config');
-    View.$customNotes = $('.custom-notes');
+    View.$customNotesContainer = $('.custom-notes');
     View.$addBtn = $('.add-btn');
     View.$goBtn = $('.go-btn');
 
@@ -124,6 +106,8 @@ $(document).ready(function(){
 
     function validateForm() {
         var inputs = View.$userData.find('input');
+        var notes = View.$customNotesContainer.find('input');
+
         for (var i=0; i<inputs.length; i++) {
             if (!$(inputs[i]).val()) {
                 alert('Fields cannot be blank');
@@ -146,6 +130,15 @@ $(document).ready(function(){
             alert('I think you did not understand what I meant with "beats per fraction". Try again.');
             return false;
         }
+
+        for (var i=0; i<notes.length; i++) {
+            var val = $(notes[i]).val();
+            if ($(notes[i]).hasClass('custom-note-interval') && (!$.isNumeric(val) ||  val < 1 || val > Controller.totalIntervals) ) {
+                alert('Note intervals need to be a number between 1 and the total number of intervals');
+                return false;
+            }
+        }
+
         return true;
     };
 
@@ -164,6 +157,20 @@ $(document).ready(function(){
         Model.bpm = parseInt($(inputs[1]).val());
         Model.bpi = parseInt($(inputs[2]).val());
         Model.bpf = parseInt($('select.bpf').val());
+        Model.notes = {};
+
+        $('.custom-note').each(function(index, note){
+            var text = $(note).find('.custom-note-text').val();
+            var interval = $(note).find('.custom-note-interval').val();
+            var color = $(note).find('.jscolor').val();
+
+            if (!Model.notes[interval]) { Model.notes[interval] = [] }
+
+            Model.notes[interval].push({
+                'color': ('#' + color),
+                'texto': text
+            });
+        });
 
         Controller.totalBeats = Math.floor(Model.songDuration*Model.bpm/60);
         Controller.totalIntervals = Math.ceil(Controller.totalBeats/Model.bpi);
@@ -187,8 +194,13 @@ $(document).ready(function(){
     };
 
     function addCustomNote() {
-        var customNote = '<div class="custom-note"><input class="custom-note-text" placeholder="Note text"></input><input class="custom-note-interval" placeholder="Interval number"></input></div>';
-        View.$customNotes.append(customNote);
+        var customNote = '<div class="custom-note"><input class="custom-note-text" placeholder="Note text"></input><input class="custom-note-interval" placeholder="Interval number"></input>';
+        var input = document.createElement('input');
+        input.classList.add('jscolor')
+        var picker = new jscolor(input);
+        picker.fromRGB(240, 230, 140);
+        customNote = $(customNote).append(input);
+        View.$customNotesContainer.append(customNote);
     };
 
     function shiftBack() {
@@ -237,14 +249,14 @@ $(document).ready(function(){
 
             // Crear notas en los intervalos
 
-            if (Model.notes[Controller.totalIntervals - i+1]) {
-                for (var j = 0; j < Model.notes[Controller.totalIntervals - i+1].length; j++) {
+            if (Model.notes[Controller.totalIntervals - i]) {
+                for (var j = 0; j < Model.notes[Controller.totalIntervals - i].length; j++) {
                     var notaElement = $(notaMarkup);
                     notaElement.css({
-                        'background-color' : Model.notes[Controller.totalIntervals - i+1][j].color,
+                        'background-color' : Model.notes[Controller.totalIntervals - i][j].color,
                         'bottom'           : 50 * j + 'px'
                     });
-                    notaElement.html(Model.notes[Controller.totalIntervals - i+1][j].texto);
+                    notaElement.html(Model.notes[Controller.totalIntervals - i][j].texto);
                     $(View.$intervalos.children()[i]).append(notaElement);
                 }
             }
