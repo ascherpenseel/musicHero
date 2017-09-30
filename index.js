@@ -14,7 +14,7 @@ Model.notes = {};
 
 // ======================= App ====================== //
 
-$(document).ready(function(){
+$(document).ready(function() {
 
     Controller.element = $('body');
 
@@ -96,7 +96,8 @@ $(document).ready(function(){
         setTimeout(function(){
             Controller.timeEngineAnimation = setInterval(function(){
                 Controller.position += pxPerMove;
-                View.$intervalos.css('transform', 'translateY(' + Controller.position + 'px)');
+                // View.$intervalos.css('transform', 'translateY(' + Controller.position + 'px)');
+                View.$intervalos.css('transform', 'translate3d(0px, ' + Controller.position + 'px, 1px)');
             }, Controller.resolution);
         }, Controller.timePerBeat);
 
@@ -133,7 +134,7 @@ $(document).ready(function(){
 
         for (var i=0; i<notes.length; i++) {
             var val = $(notes[i]).val();
-            if ($(notes[i]).hasClass('custom-note-interval') && (!$.isNumeric(val) ||  val < 1 || val > Controller.totalIntervals) ) {
+            if (val.length && ($(notes[i]).hasClass('custom-note-interval') && (!$.isNumeric(val) ||  val < 1 || val > Controller.totalIntervals) )) {
                 alert('Note intervals need to be a number between 1 and the total number of intervals');
                 return false;
             }
@@ -207,7 +208,7 @@ $(document).ready(function(){
         Controller.indexBeat = 0;
         Controller.indexVoice = 0;
         Controller.position = 0;
-        View.$intervalos.css('transform', 'translateY(0px)');
+        View.$intervalos.css('transform', 'translate3d(0px, 0px, 1px)');
     };
 
     function renderConfig() {

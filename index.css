@@ -200,7 +200,7 @@ input, select {
     position: absolute;
     width: 100%;
     bottom: 100px;
-    transform: translateY(0px);
+    transform: translate3d(0px, 0px, 1px);
     -webkit-backface-visibility: hidden;
 }
 
