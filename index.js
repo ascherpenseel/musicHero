@@ -82,6 +82,7 @@ $(document).ready(function() {
 
         // Voices and Metronome
         Controller.timeEngineBeats = setInterval(function(){
+            beep(.1);
             Controller.synth.speak(Controller.voice[Controller.indexVoice]);
             Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf;
             Controller.indexBeat++;
@@ -96,7 +97,6 @@ $(document).ready(function() {
         setTimeout(function(){
             Controller.timeEngineAnimation = setInterval(function(){
                 Controller.position += pxPerMove;
-                // View.$intervalos.css('transform', 'translateY(' + Controller.position + 'px)');
                 View.$intervalos.css('transform', 'translate3d(0px, ' + Controller.position + 'px, 1px)');
             }, Controller.resolution);
         }, Controller.timePerBeat);
@@ -269,8 +269,40 @@ $(document).ready(function() {
 
     };
 
+    function beep(duration) {
+        Controller.osc.start(Controller.ctx.currentTime); // InvalidStateError (DOM Exception 11): The object is in an invalid state
+        Controller.osc.stop(Controller.ctx.currentTime + duration);
+    };
+
     // ========= Calls on first init ============= //
 
     prefillUserData();
 
+    // iOS Allow sound
+
+    View.$goBtn.click(function(){
+
+        Controller.ctx = null, usingWebAudio = true;
+
+        try {
+          if (typeof AudioContext !== 'undefined') {
+              Controller.ctx = new AudioContext();
+          } else if (typeof webkitAudioContext !== 'undefined') {
+              Controller.ctx = new webkitAudioContext();
+          } else {
+              usingWebAudio = false;
+          }
+        } catch(e) {
+            usingWebAudio = false;
+        }
+
+        // context state at this time is `undefined` in iOS8 Safari
+        if (usingWebAudio && Controller.ctx.state === 'suspended') {
+            Controller.ctx.resume();
+        }
+
+        Controller.osc = Controller.ctx.createOscillator();
+        Controller.osc.connect(Controller.ctx.destination);
+
+    });
 });
