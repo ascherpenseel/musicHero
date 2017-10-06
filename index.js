@@ -82,7 +82,7 @@ $(document).ready(function() {
 
         // Voices and Metronome
         Controller.timeEngineBeats = setInterval(function(){
-            beep(.1);
+            // beep(.1);
             Controller.synth.speak(Controller.voice[Controller.indexVoice]);
             Controller.indexVoice = (Controller.indexVoice + 1) % Model.bpf;
             Controller.indexBeat++;
